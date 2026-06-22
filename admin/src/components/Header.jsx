@@ -1,6 +1,6 @@
 import { FaBars } from "react-icons/fa";
 
-const Header = () => {
+const Header = ({ setSidebarOpen }) => {
     return (
         <header
             className="
@@ -17,8 +17,8 @@ const Header = () => {
             {/* Left Side */}
             <div className="flex items-center gap-3">
 
-                {/* Mobile Menu Button */}
                 <button
+                    onClick={() => setSidebarOpen(true)}
                     className="
                     lg:hidden
                     text-xl
