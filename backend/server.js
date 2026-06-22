@@ -1,11 +1,12 @@
-const express = require("express");
-const app = express();
-const port = process.env.PORT || 4000;
+require("dotenv").config();
 
-app.get("/", (req, res) => {
-  res.send("Hello from backend");
-});
+const app = require("./src/app");
+const connectDB = require("./src/config/db");
 
-app.listen(port, () => {
-  console.log(`Backend running on http://localhost:${port}`);
+connectDB();
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
