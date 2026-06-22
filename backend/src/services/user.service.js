@@ -6,6 +6,10 @@ const getUsers = async () => {
 };
 
 const getUser = async (id) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new AppError("Invalid user ID", 400);
+  }
+
   const user = await userRepository.findById(id);
 
   if (!user) {
@@ -20,6 +24,10 @@ const createUser = async (data) => {
 };
 
 const updateUser = async (id, data) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new AppError("Invalid user ID", 400);
+  }
+
   const user = await userRepository.updateById(id, data);
 
   if (!user) {
@@ -30,6 +38,10 @@ const updateUser = async (id, data) => {
 };
 
 const deleteUser = async (id) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new AppError("Invalid user ID", 400);
+  }
+
   const user = await userRepository.deleteById(id);
 
   if (!user) {
