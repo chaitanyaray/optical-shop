@@ -1,48 +1,80 @@
-const userRepository = require("../repositories/user.repository");
+const bcrypt = require("bcrypt");
+
+const userRepository = require(
+  "../repositories/user.repository"
+);
+
 const AppError = require("../utils/AppError");
 
-const getUsers = async () => {
-  return userRepository.findAll();
-};
+const { generateToken } = require(
+  "../utils/jwt"
+);
 
-const getUser = async (id) => {
-  const user = await userRepository.findById(id);
+const register = async (data) => {
+  const existingUser =
+    await userRepository.findByEmail(
+      data.email
+    );
 
-  if (!user) {
-    throw new AppError("User not found", 404);
+  if (existingUser) {
+    throw new AppError(
+      "Email already exists",
+      400
+    );
   }
 
-  return user;
+  const hashedPassword =
+    await bcrypt.hash(data.password, 10);
+
+  const user =
+    await userRepository.create({
+      ...data,
+      password: hashedPassword,
+    });
+  const userObj = user.toObject();
+  delete userObj.password;
+
+  const token = generateToken({
+    id: user._id,
+    role: user.role,
+  });
+
+  return {
+    user: userObj,
+    token,
+  };
 };
 
-const createUser = async (data) => {
-  return userRepository.create(data);
-};
-
-const updateUser = async (id, data) => {
-  const user = await userRepository.updateById(id, data);
-
+const login = async ({ email, password }) => {
+  const user = await userRepository.findByEmail(email);
   if (!user) {
-    throw new AppError("User not found", 404);
+    throw new AppError("Invalid credentials", 401);
   }
 
-  return user;
-};
+  const isMatch = await bcrypt.compare(
+    password,
+    user.password
+  );
 
-const deleteUser = async (id) => {
-  const user = await userRepository.deleteById(id);
-
-  if (!user) {
-    throw new AppError("User not found", 404);
+  if (!isMatch) {
+    throw new AppError("Invalid credentials", 401);
   }
 
-  return user;
+  const token = generateToken({
+    id: user._id,
+    role: user.role,
+  });
+
+  const userObj = user.toObject();
+  delete userObj.password;
+
+  return {
+    user: userObj,
+    token,
+  };
 };
 
 module.exports = {
-  getUsers,
-  getUser,
-  createUser,
-  updateUser,
-  deleteUser,
+  register,
+  login,
 };

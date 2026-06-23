@@ -6,6 +6,9 @@ const findAll = async () => User.find();
 
 const findById = async (id) => User.findById(id);
 
+const findByEmail = async (email) =>
+  User.findOne({ email });
+
 const updateById = async (id, data) =>
   User.findByIdAndUpdate(id, data, {
     returnDocument: "after",
@@ -18,6 +21,7 @@ module.exports = {
   create,
   findAll,
   findById,
+  findByEmail,
   updateById,
   deleteById,
 };

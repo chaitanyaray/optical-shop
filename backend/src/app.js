@@ -3,6 +3,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const authRoutes = require("./routes/auth.routes");
+const userRoutes = require("./routes/user.routes");
 const errorHandler = require("./middleware/errorHandler");
 const app = express();
 
@@ -15,7 +16,8 @@ app.use("/api/v1/auth", authRoutes);
 
 app.use(errorHandler);
 
-const userRoutes = require("./routes/user.routes");
+
+
 
 app.use("/api/v1/users", userRoutes);
 
