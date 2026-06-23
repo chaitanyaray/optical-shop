@@ -14,8 +14,9 @@ const updateById = async (id, data) =>
     returnDocument: "after",
     runValidators: true,
   });
-const deleteById = async (id) =>
-  User.findByIdAndDelete(id);
+
+
+const deleteById = async (id) => User.findByIdAndDelete(id);
 
 module.exports = {
   create,

@@ -1,6 +1,8 @@
 const userRepository = require("../repositories/user.repository");
 const AppError = require("../utils/AppError");
 
+const mongoose = require("mongoose");
+
 const getUsers = async () => {
   return userRepository.findAll();
 };
