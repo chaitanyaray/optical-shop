@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
 const productRoutes = require("./routes/product.routes");
+const orderRoutes = require("./routes/order.routes");
 const errorHandler = require("./middleware/errorHandler");
 const app = express();
 
@@ -22,6 +23,8 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 
 app.use("/api/v1/products", productRoutes);
+
+app.use("/api/v1/orders", orderRoutes);
 
 
 module.exports = app;

@@ -10,6 +10,7 @@ const { generateToken } = require(
   "../utils/jwt"
 );
 
+
 const register = async (data) => {
   const existingUser =
     await userRepository.findByEmail(
