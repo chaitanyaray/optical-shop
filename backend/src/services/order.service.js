@@ -68,6 +68,9 @@ const createOrder = async (orderData) => {
         status: "PENDING"
       }
 
+      // FIXME: Pass MongoDB session to orderRepository.createOrder()
+      // so stock deduction and order creation are fully transactional.
+
     );
 
     await session.commitTransaction();
