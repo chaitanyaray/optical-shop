@@ -1,6 +1,7 @@
 const Order = require('../models/Order');
 
 const createOrder = async (orderData) => {
+
   const order = new Order(orderData);
   return await order.save();
 };
@@ -16,6 +17,11 @@ const getAllOrders = async () => {
     .populate('user', 'name email role')
     .populate('items.product', 'name price stock');
 
+};
+
+const getOrdersByUser = async (userId) => {
+  return Order.find({ user: userId })
+    .populate("items.product", "name price");
 };
 
 const updateOrder = async (orderId, updateData) => {
@@ -35,6 +41,7 @@ module.exports = {
   createOrder,
   getOrderById,
   getAllOrders,
+  getOrdersByUser,
   updateOrder,
   deleteOrder,
 };

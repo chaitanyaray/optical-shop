@@ -22,6 +22,16 @@ const getAllOrders = AsyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Orders retrieved successfully', orders });
 });
 
+const getMyOrders = AsyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const orders = await orderService.getMyOrders(userId);
+  if (!orders || orders.length === 0) {
+    return res.status(404).json({ message: 'No orders found for this user' });
+  }
+  res.status(200).json({ message: 'Orders retrived successfully', data: orders })
+
+})
+
 const updateOrder = AsyncHandler(async (req, res) => {
   const orderId = req.params.id;
   const updateData = req.body;
@@ -41,10 +51,13 @@ const deleteOrder = AsyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Order deleted successfully', order });
 });
 
+
+
 module.exports = {
   createOrder,
   getOrderById,
   getAllOrders,
+  getMyOrders,
   updateOrder,
   deleteOrder,
 };

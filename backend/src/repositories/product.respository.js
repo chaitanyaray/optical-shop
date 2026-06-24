@@ -10,6 +10,15 @@ const findByName = async (name) => Product.find({ name: { $regex: name, $options
 
 const findByCategory = async (category) => Product.find({ category });
 
+const findOneAndUpdate = async (
+  filter,
+  update,
+  options = {}
+) => Product.findOneAndUpdate(
+  filter,
+  update,
+  options
+);
 
 const updateById = async (id, data) => Product.findByIdAndUpdate(id, data,
   {
@@ -27,6 +36,7 @@ module.exports = {
   findById,
   findByName,
   findByCategory,
+  findOneAndUpdate,
   updateById,
   deleteById
 };

@@ -4,32 +4,87 @@ const AppError = require('../utils/AppError');
 const mongoose = require('mongoose');
 
 const createOrder = async (orderData) => {
-  let totalAmount = 0;
 
-  const items = [];
+  const session =
+    await mongoose.startSession();
 
-  for (const item of orderData.items) {
+  try {
 
-    const product = await productRepository.findById(item.product);
+    session.startTransaction();
 
-    if (!product) {
-      throw new AppError("Product not found", 404);
+    let totalAmount = 0;
+
+    const items = [];
+
+    for (const item of orderData.items) {
+
+      const product = await productRepository.findOneAndUpdate(
+        {
+          _id: item.product,
+          stock: { $gte: item.quantity }
+        },
+        {
+          $inc: {
+            stock: -item.quantity
+          }
+        },
+        {
+          returnDocument: "after",
+          session
+        }
+      );
+
+      if (!product) {
+        throw new AppError(
+          "Product out of stock",
+          400
+        );
+      }
+
+      items.push({
+        product: product._id,
+        quantity: item.quantity,
+        price: product.price
+      });
+
+      totalAmount += product.price * item.quantity;
     }
+    console.log("TOTAL:", totalAmount);
 
-    items.push({
-      product: product._id,
-      quantity: item.quantity,
-      price: product.price,
-    });
+    const payload = {
+      ...orderData,
+      items,
+      totalAmount,
+    };
 
-    totalAmount += product.price * item.quantity;
+    console.log("PAYLOAD:", payload);
+
+
+    const order = await orderRepository.createOrder(
+      {
+        ...orderData,
+        items,
+        totalAmount,
+        status: "PENDING"
+      }
+
+    );
+
+    await session.commitTransaction();
+
+    return order;
+
+  } catch (error) {
+
+    await session.abortTransaction();
+
+    throw error;
+
+  } finally {
+
+    session.endSession();
+
   }
-
-  return orderRepository.createOrder({
-    ...orderData,
-    items,
-    totalAmount,
-  });
 };
 
 const getOrderById = async (orderId) => {
@@ -49,6 +104,13 @@ const getAllOrders = async () => {
   return await orderRepository.getAllOrders();
 }
 
+const getMyOrders = async (userId) => {
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new AppError('Invalid user ID', 400);
+  }
+
+  return await orderRepository.getOrdersByUser(userId);
+}
 
 const updateOrder = async (orderId, updateData) => {
   if (!mongoose.Types.ObjectId.isValid(orderId)) {
@@ -83,6 +145,7 @@ module.exports = {
   createOrder,
   getOrderById,
   getAllOrders,
+  getMyOrders,
   updateOrder,
   deleteOrder,
 };
