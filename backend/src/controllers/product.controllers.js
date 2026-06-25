@@ -23,12 +23,14 @@ exports.getProductByName = asyncHandler(async (req, res) => {
 });
 
 exports.createProduct = asyncHandler(async (req, res) => {
-  const product = await productService.createProduct(req.body);
+
+  const product = await productService.createProduct(req.body, req.file);
+
   res.status(201).json({ success: true, data: product });
 });
 
 exports.updateProduct = asyncHandler(async (req, res) => {
-  const product = await productService.updateProduct(req.params.id, req.body);
+  const product = await productService.updateProduct(req.params.id, req.body, req.file);
   res.status(200).json({ success: true, data: product });
 });
 

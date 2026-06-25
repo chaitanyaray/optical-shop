@@ -6,6 +6,8 @@ const productController = require("../controllers/product.controllers");
 
 const { protect, authorize } = require("../middleware/auth.middleware")
 
+const upload = require("../middleware/upload.middleware");
+
 /**
  * @swagger
  * /products:
@@ -86,11 +88,12 @@ router.get("/:id", productController.getProduct);
  *       403:
  *         description: Forbidden
  */
-router.post("/", protect, authorize("ADMIN"), productController.createProduct);
+router.post("/", protect, authorize("ADMIN"), upload.single("image"), productController.createProduct);
 
 
 
-router.put("/:id", protect, authorize("ADMIN"), productController.updateProduct);
+
+router.put("/:id", protect, authorize("ADMIN"), upload.single("image"), productController.updateProduct);
 router.delete("/:id", protect, authorize("ADMIN"), productController.deleteProduct);
 
 
