@@ -7,7 +7,7 @@ const userRepository = require(
 const AppError = require("../utils/AppError");
 
 const { generateToken } = require(
-  "../utils/jwt"
+  "../utils/Jwt"
 );
 
 
