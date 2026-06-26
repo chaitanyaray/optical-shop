@@ -1,5 +1,5 @@
 const userService = require("../services/user.service");
-const asyncHandler = require("../utils/asyncHandler");
+const asyncHandler = require("../utils/AsyncHandler");
 
 exports.getUsers = asyncHandler(async (req, res) => {
   const users = await userService.getUsers();

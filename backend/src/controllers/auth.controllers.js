@@ -1,5 +1,5 @@
 const asyncHandler = require(
-  "../utils/asyncHandler"
+  "../utils/AsyncHandler"
 );
 
 const authService = require(

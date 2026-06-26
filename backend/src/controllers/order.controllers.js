@@ -1,5 +1,5 @@
 const orderService = require('../services/order.service');
-const AsyncHandler = require('../utils/asyncHandler');
+const AsyncHandler = require('../utils/AsyncHandler');
 
 const createOrder = AsyncHandler(async (req, res) => {
   const orderData = req.body;
