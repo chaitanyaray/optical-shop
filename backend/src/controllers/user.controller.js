@@ -1,31 +1,42 @@
+
 const userService = require("../services/user.service");
 const asyncHandler = require("../utils/AsyncHandler");
+const sendResponse = require("../utils/sendResponse");
 
 exports.getUsers = asyncHandler(async (req, res) => {
   const users = await userService.getUsers();
 
-  res.status(200).json({
-    success: true,
-    data: users,
-  });
+  return sendResponse(
+    res,
+    200,
+    true,
+    "Users fetched successfully",
+    users
+  );
 });
 
 exports.getUser = asyncHandler(async (req, res) => {
   const user = await userService.getUser(req.params.id);
 
-  res.status(200).json({
-    success: true,
-    data: user,
-  });
+  return sendResponse(
+    res,
+    200,
+    true,
+    "User fetched successfully",
+    user
+  );
 });
 
 exports.createUser = asyncHandler(async (req, res) => {
   const user = await userService.createUser(req.body);
 
-  res.status(201).json({
-    success: true,
-    data: user,
-  });
+  return sendResponse(
+    res,
+    201,
+    true,
+    "User created successfully",
+    user
+  );
 });
 
 exports.updateUser = asyncHandler(async (req, res) => {
@@ -34,17 +45,23 @@ exports.updateUser = asyncHandler(async (req, res) => {
     req.body
   );
 
-  res.status(200).json({
-    success: true,
-    data: user,
-  });
+  return sendResponse(
+    res,
+    200,
+    true,
+    "User updated successfully",
+    user
+  );
 });
 
 exports.deleteUser = asyncHandler(async (req, res) => {
   await userService.deleteUser(req.params.id);
 
-  res.status(200).json({
-    success: true,
-    message: "User deleted",
-  });
+  return sendResponse(
+    res,
+    200,
+    true,
+    "User deleted successfully"
+  );
 });
+

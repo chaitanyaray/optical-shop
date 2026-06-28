@@ -31,7 +31,7 @@ const upload = require("../middleware/upload.middleware");
 
 router.get("/", productController.getProducts);
 router.get("/name/:name", productController.getProductByName);
-router.get("/:id", productController.getProduct);
+router.get("/:id", productController.getProductById);
 
 /**
  * @swagger
