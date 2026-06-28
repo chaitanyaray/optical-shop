@@ -3,13 +3,15 @@ const asyncHandler = require("../utils/AsyncHandler");
 const sendResponse = require("../utils/sendResponse");
 
 exports.getProducts = asyncHandler(async (req, res) => {
-  const products = await productService.getProducts();
+  const { products, meta } = await productService.getProducts(req.query);
+
   return sendResponse(
     res,
     200,
     true,
     "Products fetched successfully",
-    products
+    products,
+    meta
   );
 
 });

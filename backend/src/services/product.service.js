@@ -6,8 +6,28 @@ const mongoose = require("mongoose");
 const uploadTocloudinary = require("../utils/cloudinaryUpload");
 const deleteFromCloudinary = require("../utils/cloudinaryDelete");
 
-const getProducts = async () => {
-  return productRepository.findAll();
+const getProducts = async (query = {}) => {
+  const page = Number(query.page) || 1
+  const limit = Number(query.limit) || 10
+
+  const skip = (page - 1) * limit;
+
+  const products = await productRepository.findAllProducts(skip, limit);
+
+  const total = await productRepository.countProducts();
+
+  const totalPages = Math.ceil(total / limit);
+
+  return {
+    products,
+    meta: {
+      page,
+      limit,
+      total,
+      totalPages,
+
+    },
+  };
 };
 
 const getProduct = async (id) => {

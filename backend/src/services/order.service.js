@@ -103,8 +103,28 @@ const getOrderById = async (orderId) => {
   return order;
 }
 
-const getAllOrders = async () => {
-  return await orderRepository.getAllOrders();
+const getAllOrders = async (query = {}) => {
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+
+  const skip = (page - 1) * limit;
+
+  const orders = await orderRepository.getAllOrders(skip, limit);
+
+  const total = await orderRepository.countOrders();
+
+  const totalPages = Math.ceil(total / limit)
+
+  return {
+    orders,
+    meta: {
+      page,
+      limit,
+      total,
+      totalPages,
+
+    },
+  };
 }
 
 const getMyOrders = async (userId) => {

@@ -2,7 +2,7 @@ const orderService = require("../services/order.service");
 const AsyncHandler = require("../utils/AsyncHandler");
 const sendResponse = require("../utils/sendResponse");
 
-const createOrder = AsyncHandler(async (req, res) => {
+exports.createOrder = AsyncHandler(async (req, res) => {
   const order = await orderService.createOrder(req.body);
 
   return sendResponse(
@@ -14,7 +14,7 @@ const createOrder = AsyncHandler(async (req, res) => {
   );
 });
 
-const getOrderById = AsyncHandler(async (req, res) => {
+exports.getOrderById = AsyncHandler(async (req, res) => {
   const order = await orderService.getOrderById(req.params.id);
 
   return sendResponse(
@@ -26,19 +26,21 @@ const getOrderById = AsyncHandler(async (req, res) => {
   );
 });
 
-const getAllOrders = AsyncHandler(async (req, res) => {
-  const orders = await orderService.getAllOrders();
+exports.getAllOrders = AsyncHandler(async (req, res) => {
+  const { orders, meta } = await orderService.getAllOrders(req.query);
+
 
   return sendResponse(
     res,
     200,
     true,
     "Orders retrieved successfully",
-    orders
+    orders,
+    meta
   );
 });
 
-const getMyOrders = AsyncHandler(async (req, res) => {
+exports.getMyOrders = AsyncHandler(async (req, res) => {
   const orders = await orderService.getMyOrders(req.user.id);
 
   return sendResponse(
@@ -50,7 +52,7 @@ const getMyOrders = AsyncHandler(async (req, res) => {
   );
 });
 
-const updateOrder = AsyncHandler(async (req, res) => {
+exports.updateOrder = AsyncHandler(async (req, res) => {
   const order = await orderService.updateOrder(
     req.params.id,
     req.body
@@ -65,7 +67,7 @@ const updateOrder = AsyncHandler(async (req, res) => {
   );
 });
 
-const deleteOrder = AsyncHandler(async (req, res) => {
+exports.deleteOrder = AsyncHandler(async (req, res) => {
   await orderService.deleteOrder(req.params.id);
 
   return sendResponse(
@@ -76,12 +78,5 @@ const deleteOrder = AsyncHandler(async (req, res) => {
   );
 });
 
-module.exports = {
-  createOrder,
-  getOrderById,
-  getAllOrders,
-  getMyOrders,
-  updateOrder,
-  deleteOrder,
-};
+
 

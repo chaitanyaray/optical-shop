@@ -3,13 +3,20 @@ const sendResponse = (
   statusCode,
   success,
   message,
-  data = null
+  data = null,
+  meta = null
 ) => {
-  return res.status(statusCode).json({
+  const response = {
     success,
     message,
     data,
-  });
+  };
+
+  if (meta) {
+    response.meta = meta;
+  }
+
+  return res.status(statusCode).json(response);
 };
 
 module.exports = sendResponse;

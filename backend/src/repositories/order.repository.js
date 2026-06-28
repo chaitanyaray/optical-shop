@@ -12,16 +12,28 @@ const getOrderById = async (orderId) => {
     .populate('items.product', 'name price stock');
 };
 
-const getAllOrders = async () => {
+const getAllOrders = async (skip, limit) => {
   return await Order.find()
     .populate('user', 'name email role')
-    .populate('items.product', 'name price stock');
+    .populate('items.product', 'name price stock')
+    .skip(skip)
+    .limit(limit);
 
 };
 
-const getOrdersByUser = async (userId) => {
+const countOrders = async () => Order.countDocuments();
+
+const getOrdersByUser = async (userId, skip, limit) => {
   return Order.find({ user: userId })
-    .populate("items.product", "name price");
+    .populate("items.product", "name price")
+    .skip(skip)
+    .limit(limit);
+};
+
+const countOrdersByUser = async (userId) => {
+  return Order.countDocuments({
+    user: userId,
+  });
 };
 
 const updateOrder = async (orderId, updateData) => {
@@ -41,7 +53,9 @@ module.exports = {
   createOrder,
   getOrderById,
   getAllOrders,
+  countOrders,
   getOrdersByUser,
+  countOrdersByUser,
   updateOrder,
   deleteOrder,
 };

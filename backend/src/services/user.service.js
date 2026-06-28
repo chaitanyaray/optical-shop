@@ -3,8 +3,27 @@ const AppError = require("../utils/AppError");
 
 const mongoose = require("mongoose");
 
-const getUsers = async () => {
-  return userRepository.findAll();
+const getUsers = async (query = {}) => {
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+
+  const skip = (page - 1) * limit;
+
+  const users = await userRepository.findAll(skip, limit);
+
+  const total = await userRepository.countUsers();
+
+  const totalPages = Math.ceil(total / limit);
+
+  return {
+    users,
+    meta: {
+      page,
+      limit,
+      total,
+      totalPages,
+    }
+  };
 };
 
 const getUser = async (id) => {
