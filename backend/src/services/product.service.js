@@ -7,14 +7,62 @@ const uploadTocloudinary = require("../utils/cloudinaryUpload");
 const deleteFromCloudinary = require("../utils/cloudinaryDelete");
 
 const getProducts = async (query = {}) => {
-  const page = Number(query.page) || 1
-  const limit = Number(query.limit) || 10
+  const filter = {};
+  const sort = query.sortBy || "-createdAt";
+  const select = query.fields
+    ? query.fields.split(",").join(" ")
+    : "";
+
+  if (query.search) {
+    filter.$or = [
+      { name: { $regex: query.search, $options: "i" } },
+      { description: { $regex: query.search, $options: "i" } },
+      { category: { $regex: query.search, $options: "i" } },
+      { brand: { $regex: query.search, $options: "i" } },
+    ];
+  }
+
+  if (query.brand) {
+
+    filter.brand = {
+      $regex: query.brand,
+      $options: "i",
+    };
+  }
+
+  if (query.category) {
+    filter.category = query.category;
+  }
+
+  if (query.isActive) {
+    filter.isActive = query.isActive === "true";
+  }
+
+
+
+  if (query.minPrice || query.maxPrice) {
+    filter.price = {};
+
+    if (query.minPrice) {
+      filter.price.$gte = Number(query.minPrice);
+
+    }
+    if (query.maxPrice) {
+      filter.price.$lte = Number(query.maxPrice);
+
+    }
+  }
+
+
+
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
 
   const skip = (page - 1) * limit;
 
-  const products = await productRepository.findAllProducts(skip, limit);
+  const products = await productRepository.findAllProducts(filter, sort, select, skip, limit);
 
-  const total = await productRepository.countProducts();
+  const total = await productRepository.countProducts(filter);
 
   const totalPages = Math.ceil(total / limit);
 
@@ -29,6 +77,7 @@ const getProducts = async (query = {}) => {
     },
   };
 };
+
 
 const getProduct = async (id) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {

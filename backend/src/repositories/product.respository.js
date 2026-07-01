@@ -2,13 +2,20 @@ const Product = require("../models/Product");
 
 const create = async (data) => Product.create(data);
 
-const findAllProducts = async (skip, limit) => {
-  return Product.find()
+const findAllProducts = async (filter, sort, select, skip, limit) => {
+  const projection = select
+    ? select
+    : "-__v";
+  return Product.find(filter)
+    .sort(sort)
+    .select(projection)
     .skip(skip)
     .limit(limit)
+
 }
 
-const countProducts = async () => Product.countDocuments()
+const countProducts = async (filter) => Product.countDocuments(filter)
+
 
 const findById = async (id) => Product.findById(id);
 

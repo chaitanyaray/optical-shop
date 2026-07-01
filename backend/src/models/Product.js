@@ -26,14 +26,17 @@ const productSchema = new mongoose.Schema(
     imagePublicId: String,
 
     category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      type: String,
+      required: true,
+      trim: true,
     },
-
     isActive: {
       type: Boolean,
       default: true
     }
+  },
+  {
+    versionKey: false,
   },
   { timestamps: true }
 );
