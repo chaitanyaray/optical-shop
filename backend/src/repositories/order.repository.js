@@ -1,19 +1,27 @@
 const Order = require('../models/Order');
 
-const createOrder = async (orderData) => {
+const createOrder = async (orderData, session) => {
 
   const order = new Order(orderData);
-  return await order.save();
+  return await order.save({ session });
 };
 
-const getOrderById = async (orderId) => {
-  return await Order.findById(orderId)
-    .populate('user', 'name email role')
-    .populate('items.product', 'name price stock');
+const getOrderById = async (orderId, session) => {
+  const query = Order.findById(orderId)
+    .populate("user", "name email role")
+    .populate("items.product", "name price stock");
+
+  if (session) {
+    query.session(session);
+  }
+
+  return query;
 };
 
-const getAllOrders = async (skip, limit) => {
+
+const getAllOrders = async (skip, limit, session) => {
   return await Order.find()
+    .session(session)
     .populate('user', 'name email role')
     .populate('items.product', 'name price stock')
     .skip(skip)
@@ -23,8 +31,8 @@ const getAllOrders = async (skip, limit) => {
 
 const countOrders = async () => Order.countDocuments();
 
-const getOrdersByUser = async (userId, skip, limit) => {
-  return Order.find({ user: userId })
+const getOrdersByUser = async (userId, skip, limit, session) => {
+  return Order.find({ user: userId }, null, { session })
     .populate("items.product", "name price")
     .skip(skip)
     .limit(limit);
@@ -36,16 +44,17 @@ const countOrdersByUser = async (userId) => {
   });
 };
 
-const updateOrder = async (orderId, updateData) => {
+const updateOrder = async (orderId, updateData, session) => {
   return await Order.findByIdAndUpdate
     (orderId, updateData, {
       returnDocument: "after",
-      runValidators: true
+      runValidators: true,
+      session
     });
 };
 
-const deleteOrder = async (orderId) => {
-  return await Order.findByIdAndDelete(orderId);
+const deleteOrder = async (orderId, session) => {
+  return await Order.findByIdAndDelete(orderId, { session });
 
 }
 

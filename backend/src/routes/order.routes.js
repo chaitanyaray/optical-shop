@@ -29,7 +29,7 @@ const { protect, authorize } = require("../middleware/auth.middleware")
  *         description: Order created successfully
  */
 
-router.post('/', protect, ordrerController.createOrder);
+router.post('/', protect, authorize("CUSTOMER"), ordrerController.createOrder);
 
 
 
@@ -37,6 +37,7 @@ router.get('/', protect, authorize('ADMIN'), ordrerController.getAllOrders);
 router.get("/my-orders", protect, authorize("CUSTOMER"), ordrerController.getMyOrders);
 router.get('/:id', protect, authorize('ADMIN'), ordrerController.getOrderById);
 router.put('/:id', protect, authorize('ADMIN'), ordrerController.updateOrder);
+router.patch('/:id/cancel', protect, authorize('CUSTOMER'), ordrerController.cancelOrder);
 router.delete('/:id', protect, authorize('ADMIN'), ordrerController.deleteOrder);
 
 module.exports = router;

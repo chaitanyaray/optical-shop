@@ -3,13 +3,26 @@ const AsyncHandler = require("../utils/AsyncHandler");
 const sendResponse = require("../utils/sendResponse");
 
 exports.createOrder = AsyncHandler(async (req, res) => {
-  const order = await orderService.createOrder(req.body);
+  const order = await orderService.createOrder(req.body, req.user.id);
 
   return sendResponse(
     res,
     201,
     true,
     "Order created successfully",
+    order
+  );
+});
+
+
+exports.cancelOrder = AsyncHandler(async (req, res) => {
+  const order = await orderService.cancelOrder(req.params.id, req.user);
+
+  return sendResponse(
+    res,
+    200,
+    true,
+    "Order cancelled successfully",
     order
   );
 });

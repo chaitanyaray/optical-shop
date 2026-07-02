@@ -4,14 +4,15 @@ const asyncHandler = require("../utils/AsyncHandler");
 const sendResponse = require("../utils/sendResponse");
 
 exports.getUsers = asyncHandler(async (req, res) => {
-  const users = await userService.getUsers();
+  const { users, meta } = await userService.getUsers(req.query);
 
   return sendResponse(
     res,
     200,
     true,
     "Users fetched successfully",
-    users
+    users,
+    meta
   );
 });
 

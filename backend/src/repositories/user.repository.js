@@ -4,9 +4,9 @@ const create = async (data) => User.create(data);
 
 
 const findAll = async (limit, skip) => {
-  return User.find(limit, skip)
-    .limit()
-    .skip()
+  return User.find()
+    .limit(limit)
+    .skip(skip);
 }
 
 const countUsers = async () => User.countDocuments()

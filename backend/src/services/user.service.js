@@ -9,11 +9,13 @@ const getUsers = async (query = {}) => {
 
   const skip = (page - 1) * limit;
 
-  const users = await userRepository.findAll(skip, limit);
+  const users = await userRepository.findAll(limit, skip);
 
   const total = await userRepository.countUsers();
 
   const totalPages = Math.ceil(total / limit);
+  console.log("Limit:", limit);
+
 
   return {
     users,

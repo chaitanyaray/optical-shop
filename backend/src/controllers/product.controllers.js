@@ -26,7 +26,7 @@ exports.getProductById = asyncHandler(async (req, res) => {
     200,
     true,
     "Product retrieved successfully",
-    products
+    product
   );
 });
 
@@ -37,7 +37,7 @@ exports.getProductByName = asyncHandler(async (req, res) => {
     200,
     true,
     "Product retrieved successfully",
-    products
+    product
   );
 });
 

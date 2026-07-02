@@ -62,7 +62,7 @@
 * [x] Update order
 * [x] Delete order
 * [x] Admin order management
-* [x] MongoDB transaction support
+* [x] Add MongoDB transaction support to order creation
 
 ## Media
 
